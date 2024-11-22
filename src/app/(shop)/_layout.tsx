@@ -12,7 +12,6 @@ function TabBarIcon(props: {
 
 const TabsLayout = () => {
   return (
-    // <SafeAreaView edges={["top"]} style={styles.safeArea}>
     <SafeAreaView edges={["top"]} style={styles.AndroidSafeArea}>
       <Tabs
         screenOptions={{
