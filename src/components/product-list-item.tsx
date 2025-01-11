@@ -1,13 +1,18 @@
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { Product } from "../../assets/types/product";
-import { Link } from "expo-router";
 
-export const ProductListItem = ({ product }: { product: Product }) => {
+import { Link } from "expo-router";
+import { Tables } from "../types/database.types";
+
+export const ProductListItem = ({
+  product,
+}: {
+  product: Tables<"product">;
+}) => {
   return (
     <Link asChild href={`/product/${product.slug}`}>
       <Pressable style={styles.item}>
         <View style={styles.itemImageContainer}>
-          <Image style={styles.itemImage} source={product.heroImage} />
+          <Image style={styles.itemImage} source={{ uri: product.heroImage }} />
         </View>
         <View style={styles.itemTextContainer}>
           <Text style={styles.itemTitle}>{product.title}</Text>
@@ -34,7 +39,7 @@ const styles = StyleSheet.create({
   itemImage: {
     width: "100%",
     height: "100%",
-    resizeMode: "cover",
+    resizeMode: "contain",
   },
   itemTextContainer: {
     padding: 8,

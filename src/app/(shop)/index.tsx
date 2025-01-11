@@ -1,24 +1,33 @@
-import { FlatList, StyleSheet, Text, View } from "react-native";
-import { PRODUCTS } from "../../../assets/products";
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { ProductListItem } from "../../components/product-list-item";
 import { ListHeader } from "../../components/list-header";
-import Auth from "../auth";
+import { getProductsAndCategories } from "../../api/api";
 
 const Home = () => {
+  const { data, isLoading, error } = getProductsAndCategories();
+  if (isLoading) return <ActivityIndicator />;
+  if (error || !data)
+    return <Text>Error {error?.message || "An error occured"}</Text>;
+
   return (
-    <Auth />
-    // <View>
-    //   <FlatList
-    //     data={PRODUCTS}
-    //     renderItem={({ item }) => <ProductListItem product={item} />}
-    //     keyExtractor={(item) => item.id.toString()}
-    //     numColumns={2}
-    //     ListHeaderComponent={ListHeader}
-    //     contentContainerStyle={styles.flatListContent}
-    //     columnWrapperStyle={styles.flatListColumn}
-    //     style={{ paddingHorizontal: 10, paddingVertical: 5 }}
-    //   />
-    // </View>
+    <View>
+      <FlatList
+        data={data.products}
+        renderItem={({ item }) => <ProductListItem product={item} />}
+        keyExtractor={(item) => item.id.toString()}
+        numColumns={2}
+        ListHeaderComponent={<ListHeader categories={data.categories} />}
+        contentContainerStyle={styles.flatListContent}
+        columnWrapperStyle={styles.flatListColumn}
+        style={{ paddingHorizontal: 10, paddingVertical: 5 }}
+      />
+    </View>
   );
 };
 

@@ -10,11 +10,12 @@ import {
 } from "react-native";
 import { useCartStore } from "../store/cart-store";
 import { StatusBar } from "expo-status-bar";
+import { createOrder, createOrderItem } from "../api/api";
 
 type CartItemType = {
   id: number;
   title: string;
-  heroImage: any;
+  heroImage: string;
   price: number;
   quantity: number;
   maxQuantity: number;
@@ -35,7 +36,7 @@ const CartItem = ({
 }: CartItemProps) => {
   return (
     <View style={styles.cartItem}>
-      <Image source={item.heroImage} style={styles.itemImage} />
+      <Image source={{ uri: item.heroImage }} style={styles.itemImage} />
       <View style={styles.itemDetails}>
         <Text style={styles.itemTitle}>{item.title}</Text>
         <Text style={styles.itemPrice}>${item.price.toFixed(2)}</Text>
@@ -75,10 +76,37 @@ export default function Cart() {
     getTotalPrice,
     resetCart,
   } = useCartStore();
+  const { mutateAsync: createSupabaseOrder } = createOrder();
+  const { mutateAsync: createSupabaseOrderItem } = createOrderItem();
 
-  const handleCheckout = () => {
-    const totalPrice = getTotalPrice();
-    Alert.alert("Proceeding to Checkout", `Total amount: ${totalPrice}$`);
+  const handleCheckout = async () => {
+    const totalPrice = parseFloat(getTotalPrice());
+
+    try {
+      await createSupabaseOrder(
+        { totalPrice },
+        {
+          onSuccess: (data) => {
+            createSupabaseOrderItem(
+              items.map((item) => ({
+                orderId: data.id,
+                productId: item.id,
+                quantity: item.quantity,
+              })),
+              {
+                onSuccess: () => {
+                  Alert.alert("Order created successfully");
+                  resetCart();
+                },
+              }
+            );
+          },
+        }
+      );
+    } catch (error) {
+      console.error("Error while creating order", error);
+      alert("Error while creating order");
+    }
   };
 
   return (
@@ -133,6 +161,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 8,
+    resizeMode: "contain",
   },
   itemDetails: {
     flex: 1,

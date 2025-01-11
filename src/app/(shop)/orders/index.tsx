@@ -1,4 +1,5 @@
 import {
+  ActivityIndicator,
   FlatList,
   ListRenderItem,
   Pressable,
@@ -7,18 +8,21 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { ORDERS } from "../../../../assets/orders";
-import { Order } from "../../../../assets/types/order";
 import { Link, Stack } from "expo-router";
+import { Tables } from "../../../types/database.types";
+import { getMyOrders } from "../../../api/api";
+import { format } from "date-fns";
 
-const renderItem: ListRenderItem<Order> = ({ item }) => (
+const renderItem: ListRenderItem<Tables<"order">> = ({ item }) => (
   <Link href={`/orders/${item.slug}`} asChild>
     <Pressable style={styles.orderContainer}>
       <View style={styles.orderContainer}>
         <View style={styles.orderDetailsContainer}>
-          <Text style={styles.orderItem}>{item.item}</Text>
-          <Text style={styles.orderDetails}>{item.details}</Text>
-          <Text style={styles.orderDate}>{item.date}</Text>
+          <Text style={styles.orderItem}>{item.slug}</Text>
+          <Text style={styles.orderDetails}>{item.description}</Text>
+          <Text style={styles.orderDate}>
+            {format(new Date(item.created_at), "MMM dd, yyyy")}
+          </Text>
         </View>
         <View
           style={[styles.statusBadge, styles[`statusBadge_${item.status}`]]}
@@ -31,11 +35,16 @@ const renderItem: ListRenderItem<Order> = ({ item }) => (
 );
 
 const Orders = () => {
+  const { data: orders, error, isLoading } = getMyOrders();
+
+  if (isLoading) return <ActivityIndicator />;
+  if (error || !orders) return <Text>Error: {error?.message}</Text>;
+  if (!orders.length) return <Text>No orders found</Text>;
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ title: "Orders" }} />
       <FlatList
-        data={ORDERS}
+        data={orders}
         keyExtractor={(item) => item.id.toString()}
         renderItem={renderItem}
       />
@@ -45,7 +54,7 @@ const Orders = () => {
 
 export default Orders;
 
-const styles = StyleSheet.create({
+const styles: { [key: string]: any } = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
