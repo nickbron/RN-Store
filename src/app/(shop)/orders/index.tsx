@@ -21,7 +21,7 @@ const renderItem: ListRenderItem<Tables<"order">> = ({ item }) => (
           <Text style={styles.orderItem}>{item.slug}</Text>
           <Text style={styles.orderDetails}>{item.description}</Text>
           <Text style={styles.orderDate}>
-            {format(new Date(item.created_at), "MMM dd, yyyy")}
+            {format(new Date(item.created_at), "MMM dd, yyyy hh:mm a")}
           </Text>
         </View>
         <View
@@ -57,11 +57,11 @@ export default Orders;
 const styles: { [key: string]: any } = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    padding: 8,
   },
   orderContainer: {
     backgroundColor: "#f8f8f8",
-    padding: 16,
+    padding: 8,
     marginVertical: 8,
     borderRadius: 8,
   },
@@ -87,6 +87,7 @@ const styles: { [key: string]: any } = StyleSheet.create({
     marginTop: 4,
   },
   statusBadge: {
+    marginTop: 16,
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 4,

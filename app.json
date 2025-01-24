@@ -14,13 +14,16 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.expo.rnstore"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "dev.expo.rnstore",
+      "googleServicesFile": ".\rn-store-a51e7-firebase-adminsdk-fbsvc-5b0f79ef05.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -28,6 +31,15 @@
     "plugins": [
       "expo-router",
       "expo-secure-store"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "b5e9567d-60bd-49bc-b5fd-9c4feeb1cb12"
+      }
+    },
+    "owner": "nick_bron"
   }
 }

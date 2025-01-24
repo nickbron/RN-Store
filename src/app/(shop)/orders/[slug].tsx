@@ -7,8 +7,7 @@ import {
   View,
 } from "react-native";
 import React from "react";
-import { Redirect, Stack, useLocalSearchParams } from "expo-router";
-import { ORDERS } from "../../../../assets/orders";
+import { Stack, useLocalSearchParams } from "expo-router";
 import { getMyOrder } from "../../../api/api";
 import { format } from "date-fns";
 
@@ -39,7 +38,7 @@ const OrderDetails = () => {
         <Text style={styles.statusText}>{order.status}</Text>
       </View>
       <Text style={styles.date}>
-        {format(new Date(order.created_at), "MMM dd, yyyy")}
+        {format(new Date(order.created_at), "MMM dd, yyyy hh:mm a")}
       </Text>
       <Text style={styles.itemsTitle}>Items Ordered:</Text>
       <FlatList
@@ -51,10 +50,12 @@ const OrderDetails = () => {
             <View style={styles.itemInfo}>
               <Text style={styles.itemName}>{item.title}</Text>
               <Text style={styles.itemPrice}>Price: ${item.price}</Text>
+              <Text style={styles.itemPrice}>Quantity: {item.quantity}</Text>
             </View>
           </View>
         )}
       />
+      <Text style={styles.orderTotal}>Total Price: ${order.totalPrice}</Text>
     </View>
   );
 };
@@ -108,6 +109,12 @@ const styles: { [key: string]: any } = StyleSheet.create({
     marginTop: 16,
     marginBottom: 8,
   },
+  orderTotal: {
+    fontSize: 18,
+    fontWeight: "bold",
+    marginTop: 16,
+    marginBottom: 8,
+  },
   orderItem: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -121,6 +128,7 @@ const styles: { [key: string]: any } = StyleSheet.create({
     width: "50%",
     height: 100,
     borderRadius: 10,
+    resizeMode: "contain",
   },
   itemInfo: {},
   itemName: {
