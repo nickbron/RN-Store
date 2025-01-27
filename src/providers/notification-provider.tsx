@@ -19,28 +19,28 @@ const NotificationProvider = ({ children }: PropsWithChildren) => {
   const notificationListener = useRef<Notifications.EventSubscription>();
   const responseListener = useRef<Notifications.EventSubscription>();
 
-  // const saveUserPushNotificationToken = async (token: string) => {
-  //   if (!token.length) return;
+  const saveUserPushNotificationToken = async (token: string) => {
+    if (!token.length) return;
 
-  //   const {
-  //     data: { session },
-  //   } = await supabase.auth.getSession();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
 
-  //   if (!session) return;
+    if (!session) return;
 
-  //   await supabase
-  //     .from("users")
-  //     .update({
-  //       expo_notification_token: token,
-  //     })
-  //     .eq("id", session.user.id);
-  // };
+    await supabase
+      .from("users")
+      .update({
+        expo_notification_token: token,
+      })
+      .eq("id", session.user.id);
+  };
 
   useEffect(() => {
     registerForPushNotificationsAsync()
       .then((token) => {
         setExpoPushToken(token ?? "");
-        // saveUserPushNotificationToken(token ?? "");
+        saveUserPushNotificationToken(token ?? "");
       })
       .catch((error: any) => setExpoPushToken(`${error}`));
 
@@ -63,8 +63,7 @@ const NotificationProvider = ({ children }: PropsWithChildren) => {
         Notifications.removeNotificationSubscription(responseListener.current);
     };
   }, []);
-  console.log("token", expoPushToken);
-  console.log("notification", notification);
+  console.log("expoPushToken: ", expoPushToken);
 
   return <>{children};</>;
 };

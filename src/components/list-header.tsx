@@ -7,18 +7,19 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React from "react";
 import { Link } from "expo-router";
 import { FontAwesome } from "@expo/vector-icons";
 import { useCartStore } from "../store/cart-store";
 import { supabase } from "../lib/supabase";
 import { Tables } from "../types/database.types";
+import { useAuth } from "../providers/auth-provider";
 
 export const ListHeader = ({
   categories,
 }: {
   categories: Tables<"category">[];
 }) => {
+  const { session, mounting } = useAuth();
   const { getItemCount } = useCartStore();
   const handleSignOut = async () => {
     await supabase.auth.signOut();
@@ -32,7 +33,9 @@ export const ListHeader = ({
               source={{ uri: "https://via.placeholder.com/40" }}
               style={styles.avatarImage}
             />
-            <Text style={styles.avatarText}>Hello Nickolas</Text>
+            <Text style={styles.avatarText}>
+              Hello {session?.user.email?.split("@")[0]}
+            </Text>
           </View>
         </View>
         <View style={styles.headerRight}>

@@ -31,7 +31,7 @@ const OrderDetails = () => {
   });
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: `${order.slug}` }} />
+      <Stack.Screen options={{ headerShown: false, title: `${order.slug}` }} />
       <Text style={styles.item}>{order.slug}</Text>
       <Text style={styles.details}>{order.description}</Text>
       <View style={[styles.statusBadge, styles[`statusBadge_${order.status}`]]}>

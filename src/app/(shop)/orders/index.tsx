@@ -37,12 +37,14 @@ const renderItem: ListRenderItem<Tables<"order">> = ({ item }) => (
 const Orders = () => {
   const { data: orders, error, isLoading } = getMyOrders();
 
+  console.log("dara:", orders);
+
   if (isLoading) return <ActivityIndicator />;
-  if (error || !orders) return <Text>Error: {error?.message}</Text>;
+  if (error || !orders) return <Text>Error {error?.message} </Text>;
   if (!orders.length) return <Text>No orders found</Text>;
   return (
     <View style={styles.container}>
-      <Stack.Screen options={{ title: "Orders" }} />
+      {/* <Stack.Screen options={{ title: "Orders" }} /> */}
       <FlatList
         data={orders}
         keyExtractor={(item) => item.id.toString()}

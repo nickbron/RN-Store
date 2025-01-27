@@ -1,4 +1,6 @@
 # Supabase
 .branches
+/migrations
+/tests
 .temp
 .env
